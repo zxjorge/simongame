@@ -8,10 +8,7 @@ SimonMainWindow::SimonMainWindow(SimonModel& model, QWidget *parent)
     , ui(new Ui::SimonMainWindow)
 {
     ui->setupUi(this);
-    ui->blueButton->setStyleSheet("QPushButton:pressed { background-color: blue; } QPushButton:released { background-color: blue; } QPushButton:hover { color: blue }");
-    ui->yellowButton->setStyleSheet("QPushButton:pressed { background-color: yellow; } QPushButton:released { background-color: blue; } QPushButton:hover { color: yellow }");
-    ui->greenButton->setStyleSheet("QPushButton:pressed { background-color: green; } QPushButton:released { background-color: blue; } QPushButton:hover { color: green }");
-    ui->redButton->setStyleSheet("QPushButton:pressed { background-color: red; } QPushButton:released { background-color: blue; } QPushButton:hover { color: red }");
+    setUpColorButtons();
 
     disableColorButtons();
 
@@ -36,6 +33,14 @@ SimonMainWindow::SimonMainWindow(SimonModel& model, QWidget *parent)
             &SimonModel::startGame,
             this,
             &SimonMainWindow::startGame);
+
+    connect(this, &SimonMainWindow::getPattern, &model,
+            &SimonModel::getPattern);
+
+    connect(&model,
+            &SimonModel::returnPattern,
+            this,
+            &SimonMainWindow::watch);
 }
 
 SimonMainWindow::~SimonMainWindow()
@@ -62,62 +67,78 @@ void SimonMainWindow::blueButtonClicked()
 
 void SimonMainWindow::startGame()
 {
-    enableColorButtons();
+    setUpColorButtons();
     ui->newGameButton->setEnabled(false);
 
     //shuffle buttons
-    connect(&timer, &QTimer::timeout, this, &SimonMainWindow::shuffleButtons);
-    timer.start();
-
-    //game loop
     ui->instructions->setText("Shuffling");
-
-    //use signals and slots to schedule events
-    //   while(lives > 0)
-    //   {
-    //       //While displaying the current pattern, color buttons should be disabled
-    //       disableColorButtons();
-    //       //set instruction label to display "Watch"
-    //       ui->instructions->setText("Watch");
-    //       for(int index : pattern){ }
-    //    }
-
-
-
-    gameOver();
+    shuffleButtons();
 }
 
 void SimonMainWindow::shuffleButtons(){
     for(int i = 0; i < 3; i++){
+        int stagger = 1200;
         int time = 1000;
-        int stagger = 2000;
         for(QPushButton* button: buttons)
         {
-            QTimer::singleShot(stagger, [=]() {
-                // Set the background color of the button to the desired color
-                string color = colorMap[button];
-                button->setStyleSheet("background-color: "+ QString::fromStdString(color));
-
-                // Use a single-shot timer to change the color back to the original color after 2 seconds
-                QTimer::singleShot(time, [=]() { button->setStyleSheet("background-color: { background-color: blue; }");
-                });
+            string color = colorMap[button];
+            QTimer::singleShot(stagger,[this, button, color, time]() {
+                changeButtonColor(button, color, time);
             });
-
+            stagger -= 100;
             time -= 150;
-            stagger -= 250;
         }
     }
-    timer.stop();
+
+    QTimer::singleShot(2500, this,  &SimonMainWindow::getPattern);
+
+}
+
+void SimonMainWindow::watch(vector<int> pattern, int level){
+    disableColorButtons();
+    ui->instructions->setText("Watch");
+    QString levelToString = QString::number(level);
+    ui->numOfLevel->setText(levelToString);
+    int stagger = 1500;
+    int time = 1000;
+    for(int x : pattern){
+        QPushButton* button = buttons[x];
+        string color = colorMap[button];
+
+        QTimer::singleShot(stagger, this, [this, button, color, time]() {
+            changeButtonColor(button, color, time);
+        });
+    }
+    QTimer::singleShot(2500, this,  &SimonMainWindow::repeat);
+}
+
+void SimonMainWindow::changeButtonColor(QPushButton* button, string color, int time)
+{
+    button->setStyleSheet("background-color: "+ QString::fromStdString(color));
+
+    // Use a single-shot timer to change the color back to the original color after 2 seconds
+    QTimer::singleShot(time, [=]() { button->setStyleSheet("background-color: { background-color: blue; }");
+    });
 }
 
 
+void SimonMainWindow::repeat()
+{
+    ui->instructions->setText("Repeat");
+    setUpColorButtons();
 
+}
 
-void  SimonMainWindow::enableColorButtons(){
+void  SimonMainWindow::setUpColorButtons(){
     ui->blueButton->setEnabled(true);
     ui->redButton->setEnabled(true);
     ui->greenButton->setEnabled(true);
     ui->yellowButton->setEnabled(true);
+
+    ui->blueButton->setStyleSheet("QPushButton:pressed { background-color: blue; } QPushButton:released { background-color: blue; } QPushButton:hover { color: blue }");
+    ui->yellowButton->setStyleSheet("QPushButton:pressed { background-color: yellow; } QPushButton:released { background-color: blue; } QPushButton:hover { color: yellow }");
+    ui->greenButton->setStyleSheet("QPushButton:pressed { background-color: green; } QPushButton:released { background-color: blue; } QPushButton:hover { color: green }");
+    ui->redButton->setStyleSheet("QPushButton:pressed { background-color: red; } QPushButton:released { background-color: blue; } QPushButton:hover { color: red }");
 }
 
 void  SimonMainWindow::disableColorButtons(){

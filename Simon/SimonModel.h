@@ -10,12 +10,15 @@ class SimonModel : public QObject
     Q_OBJECT
 public:
     explicit SimonModel(QObject *parent = nullptr);
+    void getPattern();
 
 public slots:
     void newGame();
 
 signals:
+    void returnPattern(vector<int> pattern, int level);
     void startGame();
+
 
 
 private:

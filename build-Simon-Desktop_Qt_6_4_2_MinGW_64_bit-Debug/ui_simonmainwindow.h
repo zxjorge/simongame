@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLCDNumber>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
@@ -37,6 +38,11 @@ public:
     QSplitter *splitter;
     QLabel *instructions;
     QProgressBar *progressBar;
+    QSplitter *splitter_3;
+    QSplitter *splitter_2;
+    QLabel *levelLabel;
+    QLabel *numOfLevel;
+    QLCDNumber *timer;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -92,6 +98,23 @@ public:
         progressBar->setObjectName("progressBar");
         progressBar->setValue(0);
         splitter->addWidget(progressBar);
+        splitter_3 = new QSplitter(centralwidget);
+        splitter_3->setObjectName("splitter_3");
+        splitter_3->setGeometry(QRect(490, 100, 64, 35));
+        splitter_3->setOrientation(Qt::Vertical);
+        splitter_2 = new QSplitter(splitter_3);
+        splitter_2->setObjectName("splitter_2");
+        splitter_2->setOrientation(Qt::Horizontal);
+        levelLabel = new QLabel(splitter_2);
+        levelLabel->setObjectName("levelLabel");
+        splitter_2->addWidget(levelLabel);
+        numOfLevel = new QLabel(splitter_2);
+        numOfLevel->setObjectName("numOfLevel");
+        splitter_2->addWidget(numOfLevel);
+        splitter_3->addWidget(splitter_2);
+        timer = new QLCDNumber(splitter_3);
+        timer->setObjectName("timer");
+        splitter_3->addWidget(timer);
         SimonMainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(SimonMainWindow);
         menubar->setObjectName("menubar");
@@ -115,6 +138,8 @@ public:
         newGameButton->setText(QCoreApplication::translate("SimonMainWindow", "New Game", nullptr));
         redButton->setText(QCoreApplication::translate("SimonMainWindow", "Red", nullptr));
         instructions->setText(QString());
+        levelLabel->setText(QCoreApplication::translate("SimonMainWindow", "Level", nullptr));
+        numOfLevel->setText(QCoreApplication::translate("SimonMainWindow", "0", nullptr));
     } // retranslateUi
 
 };

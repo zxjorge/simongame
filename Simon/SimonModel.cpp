@@ -7,9 +7,12 @@ SimonModel::SimonModel(QObject *parent) : QObject(parent) {
 }
 
 void SimonModel::newGame(){
-    pattern.push_back(1 + (rand() % 4));
+    pattern.push_back(rand() % 4);
     emit startGame();
+}
 
+void SimonModel::getPattern(){
+    emit returnPattern(pattern, currentLevel);
 }
 
 

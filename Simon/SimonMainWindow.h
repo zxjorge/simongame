@@ -26,18 +26,26 @@ public:
     SimonMainWindow(SimonModel& model, QWidget *parent = nullptr);
     ~SimonMainWindow();
 
+signals:
+    void userTurn();
+    void getPattern();
+
+
 private slots:
     void greenButtonClicked();
     void redButtonClicked();
     void yellowButtonClicked();
     void blueButtonClicked();
     void startGame();
+    void repeat();
 
 private:
     Ui::SimonMainWindow *ui;
-    void enableColorButtons();
+    void setUpColorButtons();
     void disableColorButtons();
     void shuffleButtons();
+    void watch(vector<int> pattern, int level);
+    void changeButtonColor(QPushButton* button, string color, int time);
     QTimer timer;
 
     vector<QPushButton*> buttons;
