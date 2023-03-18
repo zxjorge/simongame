@@ -1,5 +1,5 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'simonmainwindow.h'
+** Meta object code from reading C++ file 'SimonMainWindow.h'
 **
 ** Created by: The Qt Meta Object Compiler version 68 (Qt 6.4.2)
 **
@@ -7,10 +7,10 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../../Simon/simonmainwindow.h"
+#include "../../Simon/SimonMainWindow.h"
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'simonmainwindow.h' doesn't include <QObject>."
+#error "The header file 'SimonMainWindow.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 68
 #error "This file was generated using the moc from 6.4.2. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -28,32 +28,32 @@ namespace {
 struct qt_meta_stringdata_SimonMainWindow_t {
     uint offsetsAndSizes[14];
     char stringdata0[16];
-    char stringdata1[23];
+    char stringdata1[19];
     char stringdata2[1];
-    char stringdata3[21];
-    char stringdata4[24];
-    char stringdata5[22];
-    char stringdata6[25];
+    char stringdata3[17];
+    char stringdata4[20];
+    char stringdata5[18];
+    char stringdata6[10];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_SimonMainWindow_t::offsetsAndSizes) + ofs), len 
 Q_CONSTINIT static const qt_meta_stringdata_SimonMainWindow_t qt_meta_stringdata_SimonMainWindow = {
     {
         QT_MOC_LITERAL(0, 15),  // "SimonMainWindow"
-        QT_MOC_LITERAL(16, 22),  // "on_greenButton_clicked"
-        QT_MOC_LITERAL(39, 0),  // ""
-        QT_MOC_LITERAL(40, 20),  // "on_redButton_clicked"
-        QT_MOC_LITERAL(61, 23),  // "on_yellowButton_clicked"
-        QT_MOC_LITERAL(85, 21),  // "on_blueButton_clicked"
-        QT_MOC_LITERAL(107, 24)   // "on_newGameButton_clicked"
+        QT_MOC_LITERAL(16, 18),  // "greenButtonClicked"
+        QT_MOC_LITERAL(35, 0),  // ""
+        QT_MOC_LITERAL(36, 16),  // "redButtonClicked"
+        QT_MOC_LITERAL(53, 19),  // "yellowButtonClicked"
+        QT_MOC_LITERAL(73, 17),  // "blueButtonClicked"
+        QT_MOC_LITERAL(91, 9)   // "startGame"
     },
     "SimonMainWindow",
-    "on_greenButton_clicked",
+    "greenButtonClicked",
     "",
-    "on_redButton_clicked",
-    "on_yellowButton_clicked",
-    "on_blueButton_clicked",
-    "on_newGameButton_clicked"
+    "redButtonClicked",
+    "yellowButtonClicked",
+    "blueButtonClicked",
+    "startGame"
 };
 #undef QT_MOC_LITERAL
 } // unnamed namespace
@@ -97,15 +97,15 @@ Q_CONSTINIT const QMetaObject SimonMainWindow::staticMetaObject = { {
     qt_incomplete_metaTypeArray<qt_meta_stringdata_SimonMainWindow_t,
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<SimonMainWindow, std::true_type>,
-        // method 'on_greenButton_clicked'
+        // method 'greenButtonClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'on_redButton_clicked'
+        // method 'redButtonClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'on_yellowButton_clicked'
+        // method 'yellowButtonClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'on_blueButton_clicked'
+        // method 'blueButtonClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'on_newGameButton_clicked'
+        // method 'startGame'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -117,11 +117,11 @@ void SimonMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         auto *_t = static_cast<SimonMainWindow *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->on_greenButton_clicked(); break;
-        case 1: _t->on_redButton_clicked(); break;
-        case 2: _t->on_yellowButton_clicked(); break;
-        case 3: _t->on_blueButton_clicked(); break;
-        case 4: _t->on_newGameButton_clicked(); break;
+        case 0: _t->greenButtonClicked(); break;
+        case 1: _t->redButtonClicked(); break;
+        case 2: _t->yellowButtonClicked(); break;
+        case 3: _t->blueButtonClicked(); break;
+        case 4: _t->startGame(); break;
         default: ;
         }
     }

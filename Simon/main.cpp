@@ -1,11 +1,13 @@
-#include "simonmainwindow.h"
+#include "SimonMainWindow.h"
+#include "SimonModel.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    SimonMainWindow w;
+    SimonModel model;
+    SimonMainWindow w(model);
     w.show();
     return a.exec();
 }
