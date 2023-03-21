@@ -222,8 +222,8 @@ void SimonMainWindow::shuffleButtons(){
 }
 
 /// @brief A slot that is used to display the pattern for the user to watch
-/// @param pattern 
-/// @param level 
+/// @param pattern The pattern for the user to watch
+/// @param level The level of the game the user is on
 void SimonMainWindow::watch(vector<int> pattern, int level){
     disableColorButtons();
     ui->instructions->setText("Watch");

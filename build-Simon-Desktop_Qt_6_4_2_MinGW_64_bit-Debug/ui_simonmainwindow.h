@@ -109,7 +109,7 @@ public:
         splitter->addWidget(progressBar);
         gameOverLabel = new QLabel(centralwidget);
         gameOverLabel->setObjectName("gameOverLabel");
-        gameOverLabel->setGeometry(QRect(496, 260, 151, 20));
+        gameOverLabel->setGeometry(QRect(496, 260, 151, 41));
         QFont font;
         font.setPointSize(20);
         gameOverLabel->setFont(font);
