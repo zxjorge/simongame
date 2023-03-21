@@ -7,18 +7,20 @@
 #include <QTime>
 #include <QImage>
 #include <QThread>
-#include <QPalette>
 #include <QPushButton>
 #include <QPixmap>
 #include <QLabel>
 #include "SimonModel.h"
-#include <QDebug>
-
+#include <QMainWindow>
 using std::vector;
 using std::map;
 using std::string;
 
-#include <QMainWindow>
+/*
+ * George Benyeogor
+ * CS3505
+ * A5: Simon Game
+ */
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SimonMainWindow; }
@@ -39,7 +41,6 @@ signals:
     void resetGame();
     void timerStopped();
 
-
 private slots:
     void greenButtonClicked();
     void redButtonClicked();
@@ -57,22 +58,18 @@ private slots:
     void resetTimer();
     void disconnectTimer();
 
-
-
 private:
     Ui::SimonMainWindow *ui;
     void setUpColorButtons();
     void disableColorButtons();
     void changeButtonColor(QPushButton* button, string color, int timeout);
     void connectTimer();
-
     QTimer timer;
     double timeRatio;
     double roundTime;
     vector<QLabel*> lives;
     vector<QPushButton*> buttons;
     map<QPushButton*, string> colorMap;
-
-
 };
+
 #endif // SIMONMAINWINDOW_H

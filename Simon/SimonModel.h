@@ -1,9 +1,14 @@
 #ifndef SIMONMODEL_H
 #define SIMONMODEL_H
 #include <vector>
+#include <QObject>
 using std::vector;
 
-#include <QObject>
+/*
+ * George Benyeogor
+ * CS3505
+ * A5: Simon Game
+ */
 
 class SimonModel : public QObject
 {
@@ -26,8 +31,6 @@ signals:
     void wait();
     void reduceLife();
     void disconnectTime();
-
-
 
 private:
     int lives;
