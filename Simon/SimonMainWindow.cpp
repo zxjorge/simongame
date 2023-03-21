@@ -7,10 +7,16 @@ SimonMainWindow::SimonMainWindow(SimonModel& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::SimonMainWindow)
 {
-    ui->setupUi(this);
-    setUpColorButtons();
+    timeRatio = 1.5;
+    timer.setInterval(1000);
 
+    ui->setupUi(this);
     disableColorButtons();
+    QImage image("C:/Users/gyeag/OneDrive/Documents/CS3505/a5-qt-simon-game-zxjorge/Simon/image/heart.png");
+    ui->life1->setPixmap(QPixmap::fromImage(image));
+    ui->life2->setPixmap(QPixmap::fromImage(image));
+    ui->life3->setPixmap(QPixmap::fromImage(image));
+
 
     //Store buttons in vector so they can be accesed by index
     buttons.push_back(findChild<QPushButton*>("redButton"));
@@ -29,18 +35,85 @@ SimonMainWindow::SimonMainWindow(SimonModel& model, QWidget *parent)
             &model,
             &SimonModel::newGame);
 
+    connect(ui->redButton,
+            &QPushButton::clicked,
+            this,
+            &SimonMainWindow::redButtonClicked);
+    connect(ui->blueButton,
+            &QPushButton::clicked,
+            this,
+            &SimonMainWindow::blueButtonClicked);
+    connect(ui->greenButton,
+            &QPushButton::clicked,
+            this,
+            &SimonMainWindow::greenButtonClicked);
+    connect(ui->yellowButton,
+            &QPushButton::clicked,
+            this,
+            &SimonMainWindow::yellowButtonClicked);
+
     connect(&model,
             &SimonModel::startGame,
             this,
             &SimonMainWindow::startGame);
 
-    connect(this, &SimonMainWindow::getPattern, &model,
+    connect(this,
+            &SimonMainWindow::getPattern,
+            &model,
             &SimonModel::getPattern);
 
     connect(&model,
             &SimonModel::returnPattern,
             this,
             &SimonMainWindow::watch);
+
+    connect(this,
+            &SimonMainWindow::verify,
+            &model,
+            &SimonModel::verify);
+
+    connect(&model,
+            &SimonModel::updateProgress,
+            this,
+            &SimonMainWindow::setProgress);
+
+    connect(&model,
+            &SimonModel::wait,
+            this,
+            &SimonMainWindow::wait);
+    connect(&model,
+            &SimonModel::endGame,
+            this,
+            &SimonMainWindow::gameOver);
+    connect(&model,
+            &SimonModel::reduceLife,
+            this,
+            &SimonMainWindow::reduceLife);
+
+    connect(this,
+            &SimonMainWindow::resetGame,
+            &model,
+            &SimonModel::gameReset);
+
+    connect(&timer,
+            &QTimer::timeout,
+            this,
+            &SimonMainWindow::updateLcdNumber);
+
+    connect(this,
+            &SimonMainWindow::timerStopped,
+            this,
+            &SimonMainWindow::reduceLife);
+
+    connect(this,
+            &SimonMainWindow::timerStopped,
+            this,
+            &SimonMainWindow::resetTimer);
+
+    connect(&model,
+            &SimonModel::disconnectTime,
+            this,
+            &SimonMainWindow::disconnectTimer);
 }
 
 SimonMainWindow::~SimonMainWindow()
@@ -50,48 +123,77 @@ SimonMainWindow::~SimonMainWindow()
 
 void SimonMainWindow::greenButtonClicked()
 {
+    emit verify(2);
 }
 
 void SimonMainWindow::redButtonClicked()
 {
+    emit verify(0);
 }
 
 void SimonMainWindow::yellowButtonClicked()
 {
+    emit verify(3);
 }
 
 void SimonMainWindow::blueButtonClicked()
 {
+    emit verify(1);
+}
+
+void SimonMainWindow::setProgress(int progress)
+{
+    ui->progressBar->setValue(progress);
 }
 
 
 void SimonMainWindow::startGame()
 {
+    ui->gameOverLabel->setText("");
+
+    lives.push_back(ui->life1);
+    lives.push_back(ui->life2);
+    lives.push_back(ui->life3);
+    for(QLabel* life : lives)
+        life->setVisible(true);
+
+    emit resetGame();
+
     setUpColorButtons();
     ui->newGameButton->setEnabled(false);
-
     //shuffle buttons
     ui->instructions->setText("Shuffling");
     shuffleButtons();
 }
 
+void SimonMainWindow::updateLcdNumber(){
+    // Get the current value of the LCD number
+    int value = ui->timer->intValue();
+    value--;
+    ui->timer->display(value);
+
+    if (value == 0){
+        timer.stop();
+        emit timerStopped();
+    }
+}
+
 void SimonMainWindow::shuffleButtons(){
-    for(int i = 0; i < 3; i++){
-        int stagger = 1200;
-        int time = 1000;
-        for(QPushButton* button: buttons)
-        {
-            string color = colorMap[button];
-            QTimer::singleShot(stagger,[this, button, color, time]() {
-                changeButtonColor(button, color, time);
-            });
-            stagger -= 100;
-            time -= 150;
-        }
+    int stagger = 0;
+    int time = 500;
+    for(QPushButton* button: buttons)
+    {
+        string color = colorMap[button];
+        QTimer::singleShot(stagger,[this, button, color, time]() {
+            changeButtonColor(button, color, time);
+        });
+
+        stagger +=250;
+        time += 500;
+        wait();
     }
 
-    QTimer::singleShot(2500, this,  &SimonMainWindow::getPattern);
-
+    QTimer::singleShot(time, this,  &SimonMainWindow::getPattern);
 }
 
 void SimonMainWindow::watch(vector<int> pattern, int level){
@@ -99,7 +201,7 @@ void SimonMainWindow::watch(vector<int> pattern, int level){
     ui->instructions->setText("Watch");
     QString levelToString = QString::number(level);
     ui->numOfLevel->setText(levelToString);
-    int stagger = 1500;
+    int stagger = 0;
     int time = 1000;
     for(int x : pattern){
         QPushButton* button = buttons[x];
@@ -108,26 +210,55 @@ void SimonMainWindow::watch(vector<int> pattern, int level){
         QTimer::singleShot(stagger, this, [this, button, color, time]() {
             changeButtonColor(button, color, time);
         });
+        stagger += 500;
+        time += 1000;
+        wait();
     }
-    QTimer::singleShot(2500, this,  &SimonMainWindow::repeat);
+    QThread::sleep(1);
+    roundTime = 3+(timeRatio)*level;
+    ui->timer->display(roundTime);
+    timeRatio -= 0.01;
+    QTimer::singleShot(time, this,  &SimonMainWindow::repeat);
 }
 
-void SimonMainWindow::changeButtonColor(QPushButton* button, string color, int time)
+void SimonMainWindow::changeButtonColor(QPushButton* button, string color, int timeout)
 {
     button->setStyleSheet("background-color: "+ QString::fromStdString(color));
-
-    // Use a single-shot timer to change the color back to the original color after 2 seconds
-    QTimer::singleShot(time, [=]() { button->setStyleSheet("background-color: { background-color: blue; }");
+    QTimer::singleShot(timeout, button, [=]() {
+        button->setStyleSheet("background-color: { background-color: blue; }");
     });
+}
+
+void SimonMainWindow::wait()
+{
+    QTime dieTime= QTime::currentTime().addSecs(1);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 
 void SimonMainWindow::repeat()
 {
+    connectTimer();
+    timer.start();
     ui->instructions->setText("Repeat");
     setUpColorButtons();
-
 }
+
+void SimonMainWindow::connectTimer(){
+    connect(&timer,
+            &QTimer::timeout,
+            this,
+            &SimonMainWindow::updateLcdNumber);
+}
+
+void SimonMainWindow::disconnectTimer(){
+    disconnect(&timer,
+               &QTimer::timeout,
+               this,
+               &SimonMainWindow::updateLcdNumber);
+}
+
 
 void  SimonMainWindow::setUpColorButtons(){
     ui->blueButton->setEnabled(true);
@@ -148,7 +279,25 @@ void  SimonMainWindow::disableColorButtons(){
     ui->yellowButton->setEnabled(false);
 }
 
+void SimonMainWindow::reduceLife(){
+    QLabel* life = lives[0];
+    life->hide();
+    lives.erase(lives.begin());
+}
+
+void SimonMainWindow::resetTimer(){
+    if(lives.size() > 0){
+        ui->timer->display(roundTime);
+        timer.start();
+    }
+    else
+        gameOver();
+}
+
 void SimonMainWindow::gameOver(){
+    disableColorButtons();
+    ui->gameOverLabel->setText("Game Over");
+    ui->newGameButton->setEnabled(true);
 }
 
 

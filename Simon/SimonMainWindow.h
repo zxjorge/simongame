@@ -4,11 +4,17 @@
 #include <map>
 #include <string>
 #include <QTimer>
+#include <QTime>
+#include <QImage>
+#include <QThread>
 #include <QPalette>
 #include <QPushButton>
+#include <QPixmap>
+#include <QLabel>
 #include "SimonModel.h"
-using std::vector;
 #include <QDebug>
+
+using std::vector;
 using std::map;
 using std::string;
 
@@ -29,6 +35,9 @@ public:
 signals:
     void userTurn();
     void getPattern();
+    void verify(int move);
+    void resetGame();
+    void timerStopped();
 
 
 private slots:
@@ -38,19 +47,31 @@ private slots:
     void blueButtonClicked();
     void startGame();
     void repeat();
+    void shuffleButtons();
+    void watch(vector<int> pattern, int level);
+    void setProgress(int progress);
+    void gameOver();
+    void wait();
+    void reduceLife();
+    void updateLcdNumber();
+    void resetTimer();
+    void disconnectTimer();
+
+
 
 private:
     Ui::SimonMainWindow *ui;
     void setUpColorButtons();
     void disableColorButtons();
-    void shuffleButtons();
-    void watch(vector<int> pattern, int level);
-    void changeButtonColor(QPushButton* button, string color, int time);
-    QTimer timer;
+    void changeButtonColor(QPushButton* button, string color, int timeout);
+    void connectTimer();
 
+    QTimer timer;
+    double timeRatio;
+    double roundTime;
+    vector<QLabel*> lives;
     vector<QPushButton*> buttons;
     map<QPushButton*, string> colorMap;
-    void gameOver();
 
 
 };

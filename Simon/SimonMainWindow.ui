@@ -93,34 +93,92 @@
      </property>
     </widget>
    </widget>
-   <widget class="QSplitter" name="splitter_3">
+   <widget class="QLabel" name="gameOverLabel">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>100</y>
-      <width>64</width>
-      <height>35</height>
+      <x>496</x>
+      <y>260</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QSplitter" name="splitter_6">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>80</y>
+      <width>141</width>
+      <height>161</height>
      </rect>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
     </property>
-    <widget class="QSplitter" name="splitter_2">
+    <widget class="QSplitter" name="splitter_7">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QLabel" name="levelLabel">
+     <widget class="QLabel" name="lives">
       <property name="text">
-       <string>Level</string>
+       <string>Lives</string>
       </property>
      </widget>
-     <widget class="QLabel" name="numOfLevel">
-      <property name="text">
-       <string>0</string>
+     <widget class="QSplitter" name="splitter_4">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
+      <widget class="QLabel" name="life1">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="life2">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="life3">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QSplitter" name="splitter_3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QSplitter" name="splitter_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="QSplitter" name="splitter_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <widget class="QLabel" name="levelLabel">
+         <property name="text">
+          <string>Level</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="numOfLevel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QLCDNumber" name="timer"/>
+      </widget>
      </widget>
     </widget>
-    <widget class="QLCDNumber" name="timer"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

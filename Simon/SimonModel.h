@@ -14,19 +14,28 @@ public:
 
 public slots:
     void newGame();
+    void verify(int move);
+    void gameReset();
+    void timerReduceLife();
 
 signals:
     void returnPattern(vector<int> pattern, int level);
+    void updateProgress(int progress);
     void startGame();
+    void endGame();
+    void wait();
+    void reduceLife();
+    void disconnectTime();
 
 
 
 private:
-    bool gameStarted;
     int lives;
+    long unsigned turn;
     int currentLevel;
+    int progressIncrement;
     vector<int> pattern;
-
+    int progress;
 };
 
 #endif // SIMONMODEL_H
